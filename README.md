@@ -1,2 +1,2 @@
-# webcam_capture
-Webcam capture and online point feature extraction
+# webcam_point_features
+Detection of ORB features from online webcam imges.
