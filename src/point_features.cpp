@@ -1,12 +1,13 @@
 
 //OpenCV 
 #include "opencv2/opencv.hpp"
-#include "opencv2/core/core.hpp"
-#include "opencv2/features2d/features2d.hpp"
+#include "opencv2/core.hpp"
+#include "opencv2/features2d.hpp"
 
 //std
 #include <iostream>
 #include <cstdlib>
+#include <vector>
 
 //consts
 const unsigned int MIN_NUM_FEATURES = 300; //minimum number of point fetaures
@@ -16,10 +17,9 @@ int main(int argc, char *argv[])
     cv::VideoCapture camera; //OpenCV video capture object
     cv::Mat image; //OpenCV image object
 	int cam_id; //camera id . Associated to device number in /dev/videoX
-	cv::Ptr<cv::ORB> orb_detector = new cv::ORB(MIN_NUM_FEATURES); //ORB point feature detector
-    cv::vector<cv::KeyPoint> point_set; //set of point features
-    cv::Ptr<cv::DescriptorExtractor> orb_descriptor; //ORB descriptor
-    orb_descriptor = cv::DescriptorExtractor::create("ORB"); //init the descriptor
+    cv::Ptr<cv::ORB> orb_detector = cv::ORB::create(); //ORB point feature detector
+    orb_detector->setMaxFeatures(MIN_NUM_FEATURES);
+    std::vector<cv::KeyPoint> point_set; //set of point features
     cv::Mat descriptor_set; //set of descriptors, for each feature there is an associated descriptor 
 	
 	//check user args
@@ -62,11 +62,8 @@ int main(int argc, char *argv[])
         //clear previous points
         point_set.clear(); 
         
-        //detect point features
-        orb_detector->detect(image, point_set);
-        
-        //extract descriptors
-        orb_descriptor->compute(image,point_set,descriptor_set);
+        //detect and compute(extract) features
+        orb_detector->detectAndCompute(image, cv::noArray(), point_set, descriptor_set);
         
         //draw points on the image
         cv::drawKeypoints( image, point_set, image, 255, cv::DrawMatchesFlags::DEFAULT );      
