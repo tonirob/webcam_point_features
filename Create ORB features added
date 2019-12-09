@@ -1,0 +1,20 @@
+ webcam_point_features
+Additional commment on detection of ORB features from online webcam images:
+
+We can find information about ORB features in the file point_features.cpp:
+
+First we define ORB data by cv library:
+
+  cv::Ptr<cv::ORB> orb_detector = cv::ORB::create(); //ORB point feature detector
+    orb_detector->setMaxFeatures(MIN_NUM_FEATURES);
+    
+    Then, ORB points features will be detected and drawn on the image:
+
+//**************** Find ORB point fetaures and descriptors ****************************
+
+        //detect and compute(extract) features
+        orb_detector->detectAndCompute(image, cv::noArray(), point_set, descriptor_set);
+
+        //draw points on the image
+        cv::drawKeypoints( image, point_set, image, 255, cv::DrawMatchesFlags::DEFAULT );
+
